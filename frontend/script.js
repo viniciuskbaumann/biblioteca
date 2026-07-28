@@ -11,23 +11,27 @@ async function carregarLivros() {
 
     lista.innerHTML = "";
 
-    livros.forEach(livro => {
+livros.forEach(livro => {
 
-        lista.innerHTML += `
-            <div>
-                <strong>${livro.titulo}</strong><br>
-                ${livro.autor}<br>
-                ${livro.ano}<br>
+    lista.innerHTML += `
+        <div class="livro">
 
-                <button onclick="excluir(${livro.id})">
-                    Excluir
-                </button>
+            <div class="livro-info">
+                <h3>${livro.titulo}</h3>
 
-                <hr>
+                <p><strong>Autor:</strong> ${livro.autor}</p>
+
+                <p><strong>Ano:</strong> ${livro.ano}</p>
             </div>
-        `;
 
-    });
+            <button class="btn-excluir" onclick="excluir(${livro.id})">
+                Excluir
+            </button>
+
+        </div>
+    `;
+
+});
 
 }
 

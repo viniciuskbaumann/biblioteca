@@ -1,44 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Livros</title>
+
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<h1>Cadastro de Livros</h1>
+    <div class="container">
 
-<form id="formLivro">
+        <div class="card">
 
-    <input
-        type="text"
-        id="titulo"
-        placeholder="Título"
-        required>
+            <h1>Cadastro de Livros</h1>
+            <p class="subtitulo">Cadastre novos livros no sistema.</p>
 
-    <input
-        type="text"
-        id="autor"
-        placeholder="Autor"
-        required>
+            <form id="formLivro">
 
-    <input
-        type="number"
-        id="ano"
-        placeholder="Ano"
-        required>
+                <input
+                    type="text"
+                    id="titulo"
+                    placeholder="Título"
+                    required>
 
-    <button>Cadastrar</button>
+                <input
+                    type="text"
+                    id="autor"
+                    placeholder="Autor"
+                    required>
 
-</form>
+                <input
+                    type="number"
+                    id="ano"
+                    placeholder="Ano de publicação"
+                    required>
 
-<h2>Livros cadastrados</h2>
+                <button type="submit">
+                    Cadastrar Livro
+                </button>
 
-<div id="listaLivros"></div>
+            </form>
 
-<script src="script.js"></script>
+        </div>
+
+        <div class="card">
+
+            <h2>Livros Cadastrados</h2>
+
+            <div id="listaLivros"></div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
 
 </body>
 
