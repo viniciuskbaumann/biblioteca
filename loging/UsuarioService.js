@@ -11,16 +11,9 @@ class UsuarioService {
   }
 
   cadastrar(nome, email, senha) {
-    const usuarioExistente = this.usuarios.find((u) => u.email === email);
-
-    if (usuarioExistente) {
-      return { sucesso: false, mensagem: `Email ja cadastrado.` };
-    }
-
     const novoUsuario = new Usuario(nome, email, senha);
     this.usuarios.push(novoUsuario);
-
-    return { sucesso: true, mensagem: 'Usuário cadastrado com sucesso!', nome: novoUsuario.nome };
+    return novoUsuario;
   }
 
   login(email, senha) {
