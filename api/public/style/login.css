@@ -1,0 +1,122 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Ocupa a altura total da tela */
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px; /* Mais estreito para uma tela de login */
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 40px 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.08);
+            text-align: center;
+        }
+
+        /* Ícone simples de usuário usando CSS */
+        .icone-login {
+            background: #1f3b5b;
+            color: white;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+
+        h1 {
+            color: #1f3b5b;
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+
+        .subtitulo {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1f3b5b;
+        }
+
+        input {
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: .2s;
+            width: 100%;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1f6feb;
+            box-shadow: 0 0 0 3px rgba(31,111,235,.15);
+        }
+
+        button {
+            background: #1f3b5b;
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: .3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #29527d;
+        }
+
+        .links-uteis {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .links-uteis a {
+            color: #1f6feb;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .links-uteis a:hover {
+            color: #114eab;
+            text-decoration: underline;
+        }
