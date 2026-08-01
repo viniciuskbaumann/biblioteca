@@ -53,21 +53,20 @@ app.use("/livros", livrosRoutes);
 // Cadastro de alunos
 // ===============================
 
-let alunos = [];
-let proximoId = 1;
-
 function isValidCPF(cpf) {
-
     if (typeof cpf !== "string") {
         return false;
     }
-
     const cleanCPF = cpf.replace(/\D/g, "");
-
     return cleanCPF.length === 11;
 }
 
-app.post("/api/alunos", (req, res) => {
+function mascararCPF(cpf) {
+    const cpfString = String(cpf).padStart(11, "0");
+    return cpfString.replace(/^(\d{3})\d{5}(\d{2})$/, "$1.***.**$2");
+}
+
+app.post("/api/alunos", async (req, res) => {
 
     const {
         nome,
@@ -77,7 +76,7 @@ app.post("/api/alunos", (req, res) => {
         turma
     } = req.body;
 
-    if (!nome || typeof nome !== "string" || nome.trim().length < 3) {
+    if (!nome || typeof nome !== "string" || nome.trim().length < 3 || nome.trim().length > 100) {
         return res.status(400).json({
             error: "Nome inválido."
         });
@@ -99,47 +98,81 @@ app.post("/api/alunos", (req, res) => {
         });
     }
 
-    if (!endereco || endereco.trim().length < 5) {
+    if (!endereco || typeof endereco !== "string" || endereco.trim().length < 5 || endereco.trim().length > 200) {
         return res.status(400).json({
             error: "Endereço inválido."
         });
     }
 
-    if (!turma || turma.trim().length === 0) {
+    if (!turma || typeof turma !== "string" || turma.trim().length === 0 || turma.trim().length > 8) {
         return res.status(400).json({
             error: "Turma inválida."
         });
     }
 
-    const existeCPF = alunos.find(aluno => aluno.cpf === cleanCPF);
-
-    if (existeCPF) {
-        return res.status(409).json({
-            error: "CPF já cadastrado."
+    const turmaLimpa = turma.trim();
+    if (!/^[A-Za-z0-9\-]{1,8}$/.test(turmaLimpa)) {
+        return res.status(400).json({
+            error: "Turma contém caracteres inválidos."
         });
     }
 
-    const aluno = {
-        id: proximoId++,
-        nome: nome.trim(),
-        cpf: cleanCPF,
-        idade: parsedIdade,
-        endereco: endereco.trim(),
-        turma: turma.trim(),
-        criado_em: new Date()
-    };
+    try {
+        const existeCPF = await pool.query(
+            "SELECT id FROM aluno WHERE cpf = $1",
+            [cleanCPF]
+        );
 
-    alunos.push(aluno);
+        if (existeCPF.rows.length > 0) {
+            return res.status(409).json({
+                error: "CPF já cadastrado."
+            });
+        }
 
-    return res.status(201).json({
-        message: "Aluno cadastrado com sucesso!",
-        aluno
-    });
+        const resultado = await pool.query(
+            `INSERT INTO aluno (nome, cpf, idade, endereco, turma)
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING id, nome, cpf, idade, endereco, turma`,
+            [nome.trim(), cleanCPF, parsedIdade, endereco.trim(), turmaLimpa]
+        );
+
+        const alunoCriado = resultado.rows[0];
+
+        return res.status(201).json({
+            message: "Aluno cadastrado com sucesso!",
+            aluno: {
+                ...alunoCriado,
+                cpf: mascararCPF(alunoCriado.cpf)
+            }
+        });
+
+    } catch (err) {
+        console.error("[POST /api/alunos]", err);
+        return res.status(500).json({
+            error: "Erro ao cadastrar aluno."
+        });
+    }
 
 });
 
-app.get("/api/alunos", (req, res) => {
-    res.json(alunos);
+app.get("/api/alunos", async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            "SELECT id, nome, cpf, idade, endereco, turma FROM aluno ORDER BY id"
+        );
+
+        const alunosSeguro = resultado.rows.map(aluno => ({
+            ...aluno,
+            cpf: mascararCPF(aluno.cpf)
+        }));
+
+        res.json(alunosSeguro);
+    } catch (err) {
+        console.error("[GET /api/alunos]", err);
+        res.status(500).json({
+            error: "Erro ao buscar alunos."
+        });
+    }
 });
 
 // ===============================
@@ -193,6 +226,17 @@ app.post("/login", (req, res) => {
 
     return res.status(200).json(resultado);
 
+});
+
+// ===============================
+// Handler global de erros
+// ===============================
+
+app.use((err, req, res, next) => {
+    console.error("[Erro não tratado]", err);
+    res.status(500).json({
+        error: "Erro interno no servidor."
+    });
 });
 
 // ===============================
